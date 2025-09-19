@@ -19,3 +19,7 @@ class Book(models.Model):
     @property
     def available(self):
         return self.number_of_copies > 0
+    
+    class Meta:
+        ordering = ['id']
+
