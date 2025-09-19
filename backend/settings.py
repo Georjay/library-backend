@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from decouple import config
+import dj_database_url
 import os
 from pathlib import Path
 
@@ -77,12 +78,24 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Default to SQLite (for local development)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# Override with PostgreSQL if DATABASE_URL is set
+database_url = config('DATABASE_URL', default=None)
+
+if database_url:
+    DATABASES['default'] = dj_database_url.config(
+        default=database_url,
+        conn_max_age=600,
+        ssl_require=True
+    )
+
 
 
 # Password validation
